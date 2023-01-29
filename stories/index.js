@@ -71,13 +71,13 @@ storiesOf("DayList", module)
     backgrounds: [{ name: "dark", value: "#222f3e", default: true }],
   })
   .add("Monday", () => (
-    <DayList days={days} value={"Monday"} onChange={action("setDay")} />
+    <DayList days={days} value={"Monday"} setDay={action("setDay")} />
   ))
   .add("Tuesday", () => (
-    <DayList days={days} value={"Tuesday"} onChange={action("setDay")} />
+    <DayList days={days} value={"Tuesday"} setDay={action("setDay")} />
   ))
   .add("Wednesday", () => (
-      <DayList days={days} value={"Wednesday"} onChange={action("setDay")} />
+      <DayList days={days} value={"Wednesday"} setDay={action("setDay")} />
   ));
 
   const interviewer = {
@@ -110,7 +110,7 @@ storiesOf("DayList", module)
         id={interviewer.id}
         name={interviewer.name}
         avatar={interviewer.avatar}
-        setInterviewer={ (event) => action("setInterviewer")(interviewer.id) }
+        setInterviewer={() => action("setInterviewer")(interviewer.id)}
       />
     ));
 
@@ -189,16 +189,16 @@ storiesOf("InterviewerList", module)
       onClose={action("onClose")}
     />
   ))
-  .add("Form Edit", () => (
+  .add("Edit", () => (
     <Form
-      name={"Sheri Lu"}
-      interviewer={0}
+      name="Sheri Lu"
+      interviewer={1}
       interviewers={interviewers}
       onSave={action("onSave")}
       onCancel={action("onCancel")}
     />
   ))
-  .add("Form Create", () => (
+  .add("Create", () => (
     <Form
       interviewers={interviewers}
       onSave={action("onSave")}
