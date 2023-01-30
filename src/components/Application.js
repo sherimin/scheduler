@@ -39,7 +39,7 @@ const appointments = {
   },
   "5": {
     id: 5,
-    time: "4pm",
+    time: "4pm"
   }
 };
 
@@ -93,7 +93,7 @@ export default function Application(props) {
       />
       </section>
       <section className="schedule">
-        {appointments.map(a => <Appointment key={a.id} {...a} />)}
+       { Object.values(appointments).map(a => <Appointment key={a.id} {...a} />) }
         <Appointment key="last" time="5pm" />
       </section>
     </main>

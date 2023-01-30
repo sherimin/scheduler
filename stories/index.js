@@ -168,7 +168,10 @@ storiesOf("InterviewerList", module)
   ))
   .add("Show", () => (
     <Show 
-      onEdit={action("onEdit")} onDelete={action("onDelete")}
+      student="Lydia Miller-Jones"
+      interviewer={interviewer}
+      onEdit={action("onEdit")} 
+      onDelete={action("onDelete")}
     /> 
   ))
   .add("Confirm", () => (
@@ -207,18 +210,18 @@ storiesOf("InterviewerList", module)
   ))
   .add("Appointment Empty", () => (
     <Fragment>
-      <Appointment id={1} time="4pm" />
-      <Appointment time="5pm" />
+      <Appointment id={1} time="12pm" />
+      <Appointment id="last" time="1pm" />
     </Fragment>
   ))
   .add("Appointment Booked", () => (
     <Fragment>
       <Appointment
         id={1}
-        time="4pm"
+        time="12pm"
         interview={{ student: "Lydia Miller-Jones", interviewer }}
       />
-      <Appointment time="5pm" />
+      <Appointment id="last" time="1pm" />
     </Fragment>
   ))
 
