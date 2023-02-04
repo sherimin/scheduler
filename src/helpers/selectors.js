@@ -12,4 +12,18 @@ export function getAppointmentsForDay(state, day) {
         }
     }
     return output;
+};
+
+
+export function getInterview(state, interview) {
+    
+    let output = {};
+
+    if (interview) {
+        output["student"] = interview.student;
+        output["interviewer"] = state.interviewers[interview.interviewer];
+    } else {
+        return null;
+    }
+    return output;
 }
