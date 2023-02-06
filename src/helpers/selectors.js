@@ -16,7 +16,7 @@ export function getAppointmentsForDay(state, day) {
 
 
 export function getInterview(state, interview) {
-    
+
     let output = {};
 
     if (interview) {
