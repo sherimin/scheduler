@@ -6,7 +6,6 @@ import axios from "axios";
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 export default function Application(props) {
-  //console.log('Props In Application : ', props);
 
   const [state, setState] = useState({
     day: 'Monday',
@@ -30,10 +29,11 @@ export default function Application(props) {
       [id]: appointment
     };
 
-    setState({
-      ...state,
-      appointments
-    });
+    return axios
+      .put(`http://localhost:8001/api/appointments/${id}`, { interview })
+      .then(() => setState({ ...state, appointments }))
+      .catch(err => console.log('error in bookInterview, ', err));
+
   }
 
   const schedule = dailyAppointments.map((appointment) => {
