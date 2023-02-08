@@ -36,7 +36,7 @@ export function getInterviewersForDay(state, day) {
         if (eachDay.name === day) {
             for (const appointment of eachDay.interviewers) {
                 if (state.interviewers[appointment]) {
-                    console.log('appointment : ', state.interviewers[appointment])
+                    //console.log('appointment : ', state.interviewers[appointment])
                     output.push(state.interviewers[appointment])
                 }
             }
