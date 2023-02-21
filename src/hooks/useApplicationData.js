@@ -72,7 +72,7 @@ export default function useApplicationData() {
 
 
     return axios
-      .delete(`http://localhost:8001/api/appointments/${id}`)
+      .delete(`/api/appointments/${id}`)
       .then(() => setState({ ...state, appointments, spotsRemaining }))
       .catch(err => console.log(err));
   };
@@ -80,9 +80,9 @@ export default function useApplicationData() {
 
   useEffect(() => {
     Promise.all([
-      axios.get('http://localhost:8001/api/days'),
-      axios.get('http://localhost:8001/api/appointments'),
-      axios.get('http://localhost:8001/api/interviewers')
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers")
     ]).then((response) => setState(prev => ({...prev, days: response[0].data, appointments: response[1].data, interviewers: response[2].data}))
         )
     }, [])
