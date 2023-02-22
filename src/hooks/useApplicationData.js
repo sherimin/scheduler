@@ -24,12 +24,9 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
-    //console.log(state.day); //=> Monday
 
     //Return the total number of remaining spots on a specific day, by finding if the day of the appointment equals to a day in the db
     const interviewDay = state.days.find((day) => day.appointments.includes(id));
-    //console.log(interviewDay.name); //=> Monday
-    //console.log(interviewDay.spots); //=> 1
 
     //loop and deduct from total spots
     const spotsRemaining = state.days.map((day, index) => {
@@ -43,7 +40,7 @@ export default function useApplicationData() {
     })
 
     return axios
-      .put(`/api/appointments/${id}`, { interview })
+      .put(`/api/appointments/${id}`, appointment)
       .then(() => setState({ ...state, appointments, spotsRemaining }))
       .catch(err => console.log('error in bookInterview, ', err));
   }
@@ -72,7 +69,7 @@ export default function useApplicationData() {
 
 
     return axios
-      .delete(`/api/appointments/${id}`)
+      .delete(`/api/appointments/${id}`, appointment)
       .then(() => setState({ ...state, appointments, spotsRemaining }))
       .catch(err => console.log(err));
   };

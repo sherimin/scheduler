@@ -26,8 +26,6 @@ describe("Application", () => {
     await waitForElement(() => getByText(container, "Archie Cohen"));
     const appointment = getAllByTestId(container, "appointment")[0];
 
-    console.log('*******************', prettyDOM(appointment));
-
     // Click the "Add" button on the first empty appointment.
     fireEvent.click(getByAltText(appointment, "Add"));
 
