@@ -43,7 +43,7 @@ export default function useApplicationData() {
     })
 
     return axios
-      .put(`http://localhost:8001/api/appointments/${id}`, { interview })
+      .put(`/api/appointments/${id}`, { interview })
       .then(() => setState({ ...state, appointments, spotsRemaining }))
       .catch(err => console.log('error in bookInterview, ', err));
   }
