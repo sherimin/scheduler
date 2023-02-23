@@ -42,7 +42,6 @@ export default function useApplicationData() {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then(() => setState({ ...state, appointments, spotsRemaining }))
-      .catch(err => console.log('error in bookInterview, ', err));
   }
 
 
@@ -71,7 +70,6 @@ export default function useApplicationData() {
     return axios
       .delete(`/api/appointments/${id}`, appointment)
       .then(() => setState({ ...state, appointments, spotsRemaining }))
-      .catch(err => console.log(err));
   };
 
 

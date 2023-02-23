@@ -4,8 +4,6 @@ export default function useVisualMode(initial) {
     const [mode, setMode] = useState(initial);
     const [history, setHistory] = useState([initial]);
 
-    //console.log("*** Mode : ", mode);
-
     //Add the new mode to history
     const transition = (newMode, replace = false) => {
         //if replace is true, replace the current mode in history with a new one
