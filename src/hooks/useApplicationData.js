@@ -1,42 +1,50 @@
 import { useEffect, useReducer } from "react"
 import axios from "axios";
 
-export default function useApplicationData() {
+const SET_DAY = "SET_DAY";
+const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+const SET_INTERVIEW = "SET_INTERVIEW";
 
-  const SET_DAY = "SET_DAY";
-  const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-  const SET_INTERVIEW = "SET_INTERVIEW";
+function reducer(state, action) {
 
-  function reducer(state, action) {
+  switch (action.type) {
+    case SET_DAY:
+      return { ...state, day: action.day }
+    case SET_APPLICATION_DATA:
+      return { ...state, days: action.days, appointments: action.appointments, interviewers: action.interviewers }
+    case SET_INTERVIEW: {
 
-    switch (action.type) {
-      case SET_DAY:
-        return { ...state, day: action.day }
-      case SET_APPLICATION_DATA:
-        return { ...state, days: action.days, appointments: action.appointments, interviewers: action.interviewers }
-      case SET_INTERVIEW: {
-        const interviewDay = state.days.filter((day) => day.name === state.day)
-
-      const spotsRemaining = day => {
-        let output;
-        day.appointments.forEach(a => {
-          (!action.appointments[a].interview && output++)
-        })
-        return output;
+    let dayIndex = -1;
+    const interviewDay = state.days.find((day, index) => {
+      if(day.name === state.day) {
+        dayIndex = index;
+        return day;
       }
-
-      const updatedDay = { ...interviewDay[0], spots: spotsRemaining(interviewDay[0])};
-      const interviewDayId = state.days.indexOf(interviewDay[0]);
-      const days = [...state.days.slice(0, interviewDayId), updatedDay, ...state.days.slice( interviewDay + 1, state.days.length )];
-
-      return { ...state, appointments: action.appointments, days }
-      }
-      default:
-        throw new Error(
-          `Tried to reduce with unsupported action type: ${action.type}`
-        );
+    })
+    
+    //loop over day.appointments to see if the slot is empty
+    const spotsRemaining = day => {
+      let output = 0;
+      day.appointments.forEach(a => {
+        (!action.appointments[a].interview && output++)
+      })
+      return output;
     }
+
+    const updatedDay = { ...interviewDay, spots: spotsRemaining(interviewDay)};
+    const days = state.days;
+    days.splice(dayIndex, 1, updatedDay)
+
+    return { ...state, appointments: action.appointments, days }
+    }
+    default:
+      throw new Error(
+        `Tried to reduce with unsupported action type: ${action.type}`
+      );
   }
+}
+
+export default function useApplicationData() {
 
   const [state, dispatch] = useReducer(reducer, {
     day: 'Monday',
@@ -45,9 +53,7 @@ export default function useApplicationData() {
     interviewers: {}
   });
 
-  const setDay = day => dispatch({ type: SET_DAY, value: day });
-
-
+  const setDay = day => dispatch({ type: SET_DAY, day });
 
   const bookInterview = (id, interview) => {
 
@@ -79,7 +85,7 @@ export default function useApplicationData() {
     }
 
     return axios
-      .delete(`/api/appointments/${id}`, appointment)
+      .delete(`/api/appointments/${id}`)
       .then(() => dispatch({ type: SET_INTERVIEW, appointments }));
   };
 
@@ -89,7 +95,7 @@ export default function useApplicationData() {
       axios.get("/api/days"),
       axios.get("/api/appointments"),
       axios.get("/api/interviewers")
-    ]).then((response) => dispatch(prev => ({...prev, days: response[0].data, appointments: response[1].data, interviewers: response[2].data}))
+    ]).then((response) => dispatch({ type: SET_APPLICATION_DATA, days: response[0].data, appointments: response[1].data, interviewers: response[2].data})
         )
     }, [])
 
