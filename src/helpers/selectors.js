@@ -1,46 +1,41 @@
 export function getAppointmentsForDay(state, day) {
+  let output = [];
 
-    let output = [];
-
-    for (const eachDay of state.days) {
-        if (eachDay.name === day) {
-            for (const eachApp of eachDay.appointments) {
-                if (state.appointments[eachApp]) {
-                    output.push(state.appointments[eachApp])
-                }
-            }
+  for (const eachDay of state.days) {
+    if (eachDay.name === day) {
+      for (const eachApp of eachDay.appointments) {
+        if (state.appointments[eachApp]) {
+          output.push(state.appointments[eachApp]);
         }
+      }
     }
-    return output;
-};
-
+  }
+  return output;
+}
 
 export function getInterview(state, interview) {
+  let output = {};
 
-    let output = {};
-
-    if (interview) {
-        output["student"] = interview.student;
-        output["interviewer"] = state.interviewers[interview.interviewer];
-    } else {
-        return null;
-    }
-    return output;
+  if (interview) {
+    output["student"] = interview.student;
+    output["interviewer"] = state.interviewers[interview.interviewer];
+  } else {
+    return null;
+  }
+  return output;
 }
 
 export function getInterviewersForDay(state, day) {
-    let output = [];
+  let output = [];
 
-    for (const eachDay of state.days) {
-
-        if (eachDay.name === day) {
-            for (const appointment of eachDay.interviewers) {
-                if (state.interviewers[appointment]) {
-                    
-                    output.push(state.interviewers[appointment])
-                }
-            }
+  for (const eachDay of state.days) {
+    if (eachDay.name === day) {
+      for (const appointment of eachDay.interviewers) {
+        if (state.interviewers[appointment]) {
+          output.push(state.interviewers[appointment]);
         }
+      }
     }
-    return output;
+  }
+  return output;
 }
