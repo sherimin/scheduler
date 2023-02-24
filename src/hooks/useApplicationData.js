@@ -1,15 +1,52 @@
-import { useState, useEffect } from "react"
+import { useEffect, useReducer } from "react"
 import axios from "axios";
 
 export default function useApplicationData() {
-  const [state, setState] = useState({
+
+  const SET_DAY = "SET_DAY";
+  const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+  const SET_INTERVIEW = "SET_INTERVIEW";
+
+  function reducer(state, action) {
+
+    switch (action.type) {
+      case SET_DAY:
+        return { ...state, day: action.day }
+      case SET_APPLICATION_DATA:
+        return { ...state, days: action.days, appointments: action.appointments, interviewers: action.interviewers }
+      case SET_INTERVIEW: {
+        const interviewDay = state.days.filter((day) => day.name === state.day)
+
+      const spotsRemaining = day => {
+        let output;
+        day.appointments.forEach(a => {
+          (!action.appointments[a].interview && output++)
+        })
+        return output;
+      }
+
+      const updatedDay = { ...interviewDay[0], spots: spotsRemaining(interviewDay[0])};
+      const interviewDayId = state.days.indexOf(interviewDay[0]);
+      const days = [...state.days.slice(0, interviewDayId), updatedDay, ...state.days.slice( interviewDay + 1, state.days.length )];
+
+      return { ...state, appointments: action.appointments, days }
+      }
+      default:
+        throw new Error(
+          `Tried to reduce with unsupported action type: ${action.type}`
+        );
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, {
     day: 'Monday',
     days: [],
     appointments: {},
     interviewers: {}
   });
 
-  const setDay = day => setState({ ...state, day });
+  const setDay = day => dispatch({ type: SET_DAY, value: day });
+
 
 
   const bookInterview = (id, interview) => {
@@ -24,28 +61,13 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
-
-    //Return the total number of remaining spots on a specific day, by finding if the day of the appointment equals to a day in the db
-    const interviewDay = state.days.find((day) => day.appointments.includes(id));
-
-    //loop and deduct from total spots
-    const spotsRemaining = state.days.map((day, index) => {
-        //console.log('In spotsRemaining, ', state.appointments[id])
-        //Get the number of appointments that are null
-        if (interviewDay.name === state.day && state.appointments[id].interview === null) {
-            return { ...day, spots: interviewDay.spots - 1}
-        } else {
-            return day;
-        }
-    })
-
     return axios
-      .put(`/api/appointments/${id}`, appointment)
-      .then(() => setState({ ...state, appointments, spotsRemaining }))
-  }
+      .put(`/api/appointments/${id}`, { interview })
+      .then(() => dispatch({ type: SET_INTERVIEW, appointments }))
+  };
 
 
-  const cancelInterview = (id) => {
+  const cancelInterview = id => {
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -56,20 +78,9 @@ export default function useApplicationData() {
       [id]: appointment
     }
 
-    const interviewDay = state.days.find((day) => day.appointments.includes(id));
-    //loop and add 1 to spots
-    const spotsRemaining = state.days.map((day, index) => {
-        if (interviewDay.name === state.day) {
-            return { ...day, spots: interviewDay.spots + 1}
-        } else {
-            return day;
-        }
-    })
-
-
     return axios
       .delete(`/api/appointments/${id}`, appointment)
-      .then(() => setState({ ...state, appointments, spotsRemaining }))
+      .then(() => dispatch({ type: SET_INTERVIEW, appointments }));
   };
 
 
@@ -78,7 +89,7 @@ export default function useApplicationData() {
       axios.get("/api/days"),
       axios.get("/api/appointments"),
       axios.get("/api/interviewers")
-    ]).then((response) => setState(prev => ({...prev, days: response[0].data, appointments: response[1].data, interviewers: response[2].data}))
+    ]).then((response) => dispatch(prev => ({...prev, days: response[0].data, appointments: response[1].data, interviewers: response[2].data}))
         )
     }, [])
 
