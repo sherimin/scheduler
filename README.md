@@ -6,11 +6,16 @@ Interview Scheduler is a single-page application (SPA) that allows users to book
 
 ## Screenshots
 
-Screen recording of basic functionalities
+Screen recording of basic functionalities \
+\
+\
+\
 ![screen-gif](https://github.com/sherimin/scheduler/blob/08392692125d51672acf17e9857f32560c587662/Screen_Recording.gif)
 
-Display error messages
+Display error messages \
+\
 ![ScreenShot](https://github.com/sherimin/scheduler/blob/08392692125d51672acf17e9857f32560c587662/Screenshot_ErrorCancel.png)
+\
 ![ScreenShot](https://github.com/sherimin/scheduler/blob/08392692125d51672acf17e9857f32560c587662/Screenshot_ErrorSave.png)
 
 ## How to run this project
